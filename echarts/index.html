@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style:none;
+            text-decoration:none;
+            box-sizing: border-box;
+        }
+
+        .content-box{
+            width: 550px;
+            padding:15px;
+            margin:200px auto;
+            border:1px solid #CCC;
+        }
+        .demo-box{
+            width: 500px;
+            min-height: 300px;
+            height: auto;
+            position: relative;
+        }
+        .demo-contenet{
+            width: 100%;
+            height: 100%;
+        }
+        .demo-slide{
+            width: auto;
+            display:inline-block;
+            height: 20px;
+            border-radius: 15px;
+            background: #187adc;
+            /* display: flex;
+            justify-content: space-between;
+            align-items: center; */
+            padding: 0 10px;
+            font-size:12px;
+            color:white;
+            margin-bottom: 10px;
+            text-align: justify
+        }
+
+        .iscenter{
+            display: flex;
+            height: 100%;
+            width: 12px;
+            flex-direction:column;
+            align-items: center;
+            font-size: 12px;
+            color:#ccc;
+            padding: 5px;
+            position: absolute;
+            left: 10px;
+            top: 0;
+        }
+
+        .slider-line{
+            flex:1;
+            width: 2px;
+            background: green;
+        }
+
+        .slider-text{
+            flex-shrink: 0;
+        }   
+
+        .demo-span{
+            margin-left: 10px;
+            float:right;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-box">
+        <div class="demo-box">
+            <div class="demo-contenet"></div>
+            <div class="iscenter">
+                <div class="slider-line"></div>
+                <div class="slider-text">平均值</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let data = [{
+            name: '中国国家篮球队',
+            size: 55.3,
+        },{
+            name: '要学技术找蓝翔',
+            size: 48.2,
+        },{
+            name: '一点寒芒出现，随后枪出如龙',
+            size: 11.3,
+        }];
+
+        class resizeData {
+            constructor(data) {
+                this.domWidth = document.querySelector('.demo-box').clientWidth;
+                this.sizeArr = [];
+                this.resetData(data);
+            }
+            
+            /**
+             * 处理数据
+             * @param {Array} arr 需要处理的数组
+            */
+            resetData(arr) {
+                arr && arr.forEach((item, index) => {
+                    this.sizeArr.push(item.size); 
+                    let sizeNum =  (this.domWidth / 100) * item.size;
+                    let oDom = document.querySelector('.demo-contenet');
+                    let innerDom = oDom.innerHTML;
+                    // style="width:${sizeNum}px"
+                    let strDom = `<div>
+                            <div class="demo-slide" style="min-width:${sizeNum}px">
+                                <span class="demo-text">${item.name}</span>
+                                <span class="demo-text demo-span">${item.size}%</span>
+                            </div>
+                        </div>`;
+                    oDom.innerHTML = innerDom + strDom;
+                });
+                this.iscenter([...this.sizeArr]);
+            }
+
+            /**
+             * 求取中间值并且渲染
+             * @param {Object} obj 所有size的数组
+            */
+            iscenter(obj) {
+                const average = arr => arr.reduce((acc, val) => acc + val, 0) / arr.length;
+                let num = average(obj);
+                let isnum = this.getNum(num,this.sizeArr);
+            }
+            
+            /**
+             * 找出这个数值在数组中最相近的那一项
+             * @param {Array} arr 
+             * @param {Number} num
+            */
+            getNum(num, arr) {
+                let oNum = {
+                    data:0,
+                    size:0,
+                    index:0,
+                };
+                this.sizeArr.forEach((item, index) => {
+                    let returnNum = this.getdata(item,num);
+                    console.log(returnNum,returnNum)
+                    if(returnNum < oNum.size || oNum.size == 0) {
+                        oNum.size = returnNum;
+                        oNum.data = item;
+                        oNum.index = index;
+                    } 
+                });
+                document.querySelector('.iscenter').style.left = document.querySelectorAll('.demo-slide')[oNum.index].clientWidth - 10 + 'px';
+                document.querySelector('.slider-text').innerHTML = `平均值${num.toFixed(0)}`;
+            }
+
+            /**
+             * @param 
+            */
+            getdata(item, num) {
+                return Math.abs(num - item);
+            }
+        }
+
+        new resizeData(data)
+    </script>
+</body>
+</html>

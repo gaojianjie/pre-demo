@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style:none;
+            text-decoration: none;
+            box-sizing:border-box;
+        }
+        
+        .list-box{
+            width: 100%;
+            overflow: hidden;
+            overflow-x:auto;
+            display:flex;
+            align-items: center;
+        }
+
+        .list-item{
+            margin-right: 20px;
+            flex-shrink:0;
+            padding: 20px 10px;
+        }
+
+        .active{
+            color:red;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="list-box">
+        <div class="list-item">美食1</div>
+        <div class="list-item">美食2</div>
+        <div class="list-item">美食3</div>
+        <div class="list-item">美食4</div>
+        <div class="list-item">美食5</div>
+        <div class="list-item">美食6</div>
+        <div class="list-item">美食7</div>
+        <div class="list-item">美食8</div>
+        <div class="list-item">美食9</div>
+        <div class="list-item">美食10</div>
+        <div class="list-item">美食11</div>
+        <div class="list-item">美食12</div>
+        <div class="list-item">美食13</div>
+        <div class="list-item">美食14</div>
+        <div class="list-item">美食15</div>
+        <div class="list-item">美食16</div>
+        <div class="list-item">美食17</div>
+        <div class="list-item">美食18</div>
+        <div class="list-item">美食19</div>
+        <div class="list-item">美食20</div>
+        <div class="list-item">美食21</div>
+        <div class="list-item">美食22</div>
+
+    </div>
+
+    <script>
+        document.querySelectorAll('.list-item').forEach(function(item, index) {
+            item.onclick = function() {
+                document.querySelectorAll('.list-item').forEach((ite,ind) => {
+                    ite.classList.remove('active')
+                })
+                item.classList.add('active')
+
+                let bgs = document.querySelector('.list-box').scrollLeft;
+                let oDomW = item.clientWidth / 2
+                let clientWidth = document.querySelector('.list-box').clientWidth / 2;
+                let offsetLeft = item.offsetLeft;
+                let xnum = offsetLeft - bgs;
+
+                if(xnum < clientWidth){
+                    // 减
+                    // document.querySelector('.list-box').scrollLeft = bgs - (clientWidth - xnum) + oDomW;
+                    animateDom({
+                        dom: document.querySelector('.list-box'),
+                        attr:'scrollLeft',
+                        val: bgs - (clientWidth - xnum) + oDomW,
+                        time: 500,
+                    })
+                } else {
+                    // 加
+                    // document.querySelector('.list-box').scrollLeft = bgs + xnum - clientWidth + oDomW;
+                     animateDom({
+                        dom: document.querySelector('.list-box'),
+                        attr: 'scrollLeft',
+                        val: bgs + xnum - clientWidth + oDomW,
+                        time: 500,
+                    })
+                }
+            }
+        })
+
+        function animateDom(obj) {
+            clearInterval(window.scrollTimer)
+            let oTime = 0;
+            let domScroll = obj.dom[obj.attr];
+            let numSCroll = Math.abs(obj.val - domScroll);
+            let isOrder = domScroll < obj.val ? true : false;
+            let timeNum = Math.floor(obj.time / 20);
+           
+            window.scrollTimer = setInterval(() => {
+                oTime += 20
+                oTime >= obj.time ? clearInterval(window.scrollTimer) : null;
+                if(isOrder) {
+                    obj.dom[obj.attr] = obj.dom[obj.attr] + (numSCroll / timeNum);
+                } else {
+                    obj.dom[obj.attr] = obj.dom[obj.attr] - (numSCroll / timeNum);
+                }
+                console.log(obj.dom[obj.attr],123)
+            }, 20);
+        }
+    </script>
+    <!-- <script src ="./WordMatcher.js"></script> -->
+</body>
+</html>
