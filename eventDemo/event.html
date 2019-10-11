@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>防抖和节流</title>
+</head>
+<body>
+    <button id="debounce">防抖事件</button>
+
+    <!-- <button id="throttle">截流事件</button> -->
+    <script>
+        /**
+         * 防抖事件
+         * @param { Function } fn 执行的回调函数
+         * @param { Number } wait 间隔时常
+        */
+        function debounce(fn,wait) {
+            let timer = null;
+            return function () {
+                clearTimeout(timer); // 每当用户输入的时候把前一个 setTimeout clear 掉
+                timer = setTimeout(() => { // 然后又创建一个新的 setTimeout, 这样就能保证输入字符后的 interval 间隔内如果还有字符输入的话，就不会执行 fn 函数
+                    fn.apply(this, arguments);
+                }, 500);
+            };
+        }
+
+        /**
+         * fn.apply(this，arguments)
+         * 这个步骤的作用就是  防止this指向window以及，点击事件丢失e参数
+        */
+        document.querySelector('#debounce').onclick = debounce(function(e) {
+            console.log(e, '++++')
+            console.log(123)
+        })
+    </script>
+</body>
+</html>

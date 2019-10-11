@@ -59,9 +59,8 @@
                     renderDom();
                 }
             })
-        });
+        });  
         intersectionObserver.observe(scrollDemoFooter);
-        
         function renderDom() {
             for (let i = 0; i < 10; i++) {
                 $('.scroll-demo-footer').before(`<div class="scroll-demo-item">这个是内容${itemNum}</div>`)
